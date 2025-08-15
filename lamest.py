@@ -25,7 +25,7 @@ def get_commands(key):
     
     if response.error is not None:
         raise LameException(response.error)
-    return response.output[0].content[0].text
+    return response.output_text
 def main():
     load_dotenv()
     my_api_key = os.getenv('OPEN_API_KEY')
